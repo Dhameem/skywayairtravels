@@ -19,7 +19,8 @@ export class DataService {
   result:any;
 
   getUsers() {
-    return this.http.get("/api/users")
-      .map(result => this.result = result.json().data);
+    return this.http.get("api/users")
+    .map(data => data.json()).toPromise()
   }
+
 }

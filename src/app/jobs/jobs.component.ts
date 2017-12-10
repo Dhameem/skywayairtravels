@@ -9,13 +9,19 @@ import { DataService } from '../data.service';
 export class JobsComponent implements OnInit {
 
   constructor(private dataservice:DataService) { }
-
-  data:string='';
-  users: Array<any>;
-
-  ngOnInit() {      
-      this.dataservice.getUsers().subscribe(
-        res => 
-        this.users = res);  
-  } 
-}
+  
+    data:string='';
+    users: Array<any>;
+  
+    ngOnInit() {
+    console.log(this.dataservice.Cars);
+  
+      this.data=this.dataservice.myData();
+  
+       this.dataservice.getUsers()
+       .then(users => this.users = users)
+       .catch(err => console.log(err))
+    }
+  
+  }
+  

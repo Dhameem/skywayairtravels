@@ -1,58 +1,32 @@
-const express = require('express');
-const router = express.Router();
-const MongoClient = require('mongodb').MongoClient;
-const ObjectID = require('mongodb').ObjectID;
+// Express
+let express = require("express");
+const app = express.Router();
+const path = require("path");
+
+// Morgan
+let morgan = require("morgan");
+app.use(morgan('dev')); 
 
 // Connect
-const connection = (closure) => {
-    return MongoClient.connect('mongodb://saravana7:Saravana7@ds163595.mlab.com:63595/mean', (err, db) => {
-        if (err) return console.log(err);
+// Mongo Database
+let mongoose = require("mongoose");
+mongoose.connect('mongodb://saravana7:Saravana7#@ds163595.mlab.com:63595/kit');
+let UserSchema = new mongoose.Schema({
+    first_name: { type: String, require: true },
+    last_name: { type: String, require: true },
+    email: { type: String, require: true },
+    editable: { type: Boolean, require: true }
+})
+mongoose.model("User", UserSchema);
+let User = mongoose.model("User");
 
-        closure(db);
-    });
-};
 
-// Error handling
-const sendError = (err, res) => {
-    response.status = 501;
-    response.message = typeof err == 'object' ? err.message : err;
-    res.status(501).json(response);
-};
-
-// Response handling
-let response = {
-    status: 200,
-    data: [],
-    message: null
-};
-
-// Get users
-router.get('/users', (req, res) => {
-    connection((db) => {
-        db.collection('users')
-            .find()
-            .toArray()
-            .then((users) => {
-                response.data = users;
-                res.json(response);
-            })
-            .catch((err) => {
-                sendError(err, res);
-            });
-    });
-});
-
-router.get('/users/create', (req, res) => {
-    var myobj = { name: "dhameem", address: "Highway 37" };
-    connection((db) => {
-        db.collection('users')
-            .insertOne(myobj, function(err, res) {
-                res.json(response);
-            })
-            .catch((err) => {
-                sendError(err, res);
-            });
-    });
-});
-
-module.exports = router;
+// Routes
+// Get Users
+app.get("/users", (req, res, next) => {
+    console.log("Server > GET '/users' ");
+    User.find({}, (err, users)=>{
+        return res.json(users);
+    })
+})
+module.exports = app;

@@ -31,7 +31,7 @@ import { DataService } from './data.service';
     AdminComponent
   ],
   imports: [
-    BrowserModule,
+    BrowserModule,	
     HttpModule,
     RouterModule.forRoot(Approute)
   ],
